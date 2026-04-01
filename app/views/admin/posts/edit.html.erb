@@ -1,0 +1,10 @@
+<% content_for :title, "Edit Post" %>
+
+<div class="mb-6">
+  <h1 class="text-3xl font-bold text-indigo-700">Edit Post</h1>
+  <p class="text-gray-500 mt-1"><%= @post.title %></p>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+  <%= render "form", post: @post %>
+</div>

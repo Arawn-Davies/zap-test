@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+hello_world:
+  title: Hello, World!
+  body: Welcome to my first post.
+  published_at: <%= 3.days.ago %>
+  user: admin
+
+draft_post:
+  title: Draft Post
+  body: This is an unpublished draft.
+  published_at:
+  user: admin
