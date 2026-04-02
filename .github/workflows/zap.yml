@@ -1,0 +1,59 @@
+name: ZAP Passive Baseline Scan
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y default-libmysqlclient-dev libvips
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up database
+        env:
+          RAILS_ENV: development
+          DATABASE_URL: mysql2://127.0.0.1:3306
+        run: bin/rails db:create db:migrate
+
+      - name: Start Rails server
+        env:
+          RAILS_ENV: development
+          DATABASE_URL: mysql2://127.0.0.1:3306
+          SECRET_KEY_BASE: a_dummy_secret_key_base_for_zap_ci_scanning_only
+        run: |
+          bin/rails server -p 3000 &
+          echo "Waiting for Rails to start..."
+          for i in $(seq 1 30); do
+            curl -s http://localhost:3000 > /dev/null && echo "Rails is up" && break
+            sleep 2
+          done
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: 'http://localhost:3000'
+          fail_action: false
