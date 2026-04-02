@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+  <context>
+    <name>Default Context</name>
+    <desc/>
+    <inscope>true</inscope>
+    <incregexes>http://localhost:3000.*</incregexes>
+    <tech/>
+    <urlparser>
+      <class>org.zaproxy.zap.model.StandardParameterParser</class>
+      <config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
+    </urlparser>
+    <postparser>
+      <class>org.zaproxy.zap.model.StandardParameterParser</class>
+      <config>{"kvps":"&amp;","kvs":"=","struct":[]}</config>
+    </postparser>
+    <authentication>
+      <type>2</type>
+      <loggedinregex>\QLogout\E</loggedinregex>
+      <loggedoutregex>\QLogin\E</loggedoutregex>
+      <pollurl/>
+      <polldata/>
+      <pollfreq>60</pollfreq>
+      <pollunits>requests</pollunits>
+      <form>
+        <loginurl>http://localhost:3000/login</loginurl>
+        <loginrequestdata>username={%username%}&amp;password={%password%}</loginrequestdata>
+      </form>
+    </authentication>
+    <session>
+      <type>2</type>
+    </session>
+    <authorization>
+      <type>0</type>
+      <basic>
+        <header/>
+        <body/>
+        <logic>AND</logic>
+        <code>-1</code>
+      </basic>
+    </authorization>
+    <users>
+      <!-- username=REPLACE_USERNAME&password=REPLACE_PASSWORD URL-encoded -->
+      <user>1;true;Admin+User;0;username%3DREPLACE_USERNAME%26password%3DREPLACE_PASSWORD</user>
+    </users>
+    <forceduser>1</forceduser>
+  </context>
+</configuration>
