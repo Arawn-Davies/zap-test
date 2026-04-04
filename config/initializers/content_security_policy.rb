@@ -19,8 +19,8 @@ Rails.application.configure do
     policy.frame_ancestors :self
   end
 
-  # Generate a per-request nonce for inline scripts (importmap tags, Turbo).
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
+  # Generate a cryptographically random nonce per request for inline scripts (importmap tags, Turbo).
+  config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src]
 
   # Automatically add `nonce` to script tags emitted by Rails helpers.
