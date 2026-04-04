@@ -1,4 +1,6 @@
-# frozen_string_literal: true
+class Admin::DashboardController < ApplicationController
+  before_action :require_admin
 
-class DashboardController
+  def index
+  end
 end
