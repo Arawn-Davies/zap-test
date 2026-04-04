@@ -13,8 +13,8 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password:
+  username: <%= ENV.fetch("DB_USERNAME") { "root" } %>
+  password: <%= ENV["DB_PASSWORD"] %>
   host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
 
 development:
@@ -58,8 +58,8 @@ production:
   primary: &primary_production
     <<: *default
     database: zap_test_production
-    username: zap_test
-    password: <%= ENV["ZAP_TEST_DATABASE_PASSWORD"] %>
+    username: <%= ENV.fetch("DB_USERNAME") { "zap_test" } %>
+    password: <%= ENV["DB_PASSWORD"] %>
   cache:
     <<: *primary_production
     database: zap_test_production_cache

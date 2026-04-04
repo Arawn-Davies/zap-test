@@ -17,7 +17,7 @@ jobs:
       mysql:
         image: mysql
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD || 'ci_password' }}
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -37,13 +37,13 @@ jobs:
       - name: Set up database
         env:
           RAILS_ENV: development
-          DATABASE_URL: mysql2://127.0.0.1:3306
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD || 'ci_password' }}
         run: bin/rails db:create db:migrate db:seed
 
       - name: Start Rails server
         env:
           RAILS_ENV: development
-          DATABASE_URL: mysql2://127.0.0.1:3306
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD || 'ci_password' }}
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE || 'a_dummy_secret_key_base_for_zap_nightly_scan_only' }}
         run: |
           bin/rails server -p 3000 &
