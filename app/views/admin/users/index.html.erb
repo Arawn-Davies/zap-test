@@ -1,0 +1,63 @@
+<% content_for :title, "Manage Users" %>
+
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <h1 class="text-4xl font-bold text-indigo-700 mb-2">Users</h1>
+    <p class="text-gray-500 text-lg">Manage user accounts.</p>
+  </div>
+  <%= link_to "New User", new_admin_user_path,
+      class: "bg-indigo-600 text-white px-4 py-2 rounded-xl font-medium hover:bg-indigo-700 transition text-sm" %>
+</div>
+
+<% if @users.any? %>
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b border-gray-100">
+        <tr>
+          <th class="text-left px-6 py-3 text-gray-500 font-medium">Username</th>
+          <th class="text-left px-6 py-3 text-gray-500 font-medium">Email</th>
+          <th class="text-left px-6 py-3 text-gray-500 font-medium">Role</th>
+          <th class="text-left px-6 py-3 text-gray-500 font-medium">Created</th>
+          <th class="text-left px-6 py-3 text-gray-500 font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <% @users.each do |user| %>
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4 font-medium text-gray-800"><%= user.username %></td>
+            <td class="px-6 py-4 text-gray-600"><%= user.email %></td>
+            <td class="px-6 py-4">
+              <% if user.admin? %>
+                <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full text-xs font-medium">Admin</span>
+              <% else %>
+                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">User</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-gray-400"><%= user.created_at.strftime("%B %-d, %Y") %></td>
+            <td class="px-6 py-4">
+              <div class="flex gap-3">
+                <%= link_to "View", admin_user_path(user),
+                    class: "text-indigo-600 font-medium hover:text-indigo-800 transition" %>
+                <%= link_to "Edit", edit_admin_user_path(user),
+                    class: "text-indigo-600 font-medium hover:text-indigo-800 transition" %>
+                <%= link_to "Delete", admin_user_path(user),
+                    data: { turbo_method: :delete, turbo_confirm: "Delete #{user.username}? This cannot be undone." },
+                    class: "text-red-500 font-medium hover:text-red-700 transition" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center text-gray-400">
+    <p class="text-xl mb-2">No users yet.</p>
+    <p class="text-sm"><%= link_to "Create the first user", new_admin_user_path, class: "text-indigo-600 hover:text-indigo-800" %></p>
+  </div>
+<% end %>
+
+<div class="mt-6">
+  <%= link_to "← Back to admin", admin_root_path,
+      class: "text-indigo-600 font-medium hover:text-indigo-800 transition text-sm" %>
+</div>
