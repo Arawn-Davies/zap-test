@@ -12,6 +12,10 @@ jobs:
   scan_ruby:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      security-events: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -22,8 +26,28 @@ jobs:
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-      
+        id: brakeman
+        run: bin/brakeman --no-pager -o brakeman-report.html -o brakeman-report.json -o brakeman-report.md -o brakeman-report.sarif
+        continue-on-error: true
+
+      - name: Upload Brakeman SARIF report to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: brakeman-report.sarif
+
+      - name: Upload Brakeman reports as artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: brakeman-reports
+          path: |
+            brakeman-report.html
+            brakeman-report.json
+            brakeman-report.md
+
+      - name: Fail if Brakeman found warnings
+        if: steps.brakeman.outcome == 'failure'
+        run: exit 1
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
       
