@@ -23,5 +23,19 @@ module ZapTest
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Security headers added to every Rails-generated response.
+    config.action_dispatch.default_headers.merge!(
+      "Cross-Origin-Opener-Policy"   => "same-origin",
+      "Cross-Origin-Embedder-Policy" => "require-corp",
+      "Cross-Origin-Resource-Policy" => "same-origin",
+      "Permissions-Policy"           => "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+    )
+
+    # Security headers for static files served by the public file server.
+    STATIC_SECURITY_HEADERS = {
+      "X-Content-Type-Options"       => "nosniff",
+      "Cross-Origin-Resource-Policy" => "same-origin"
+    }.freeze
   end
 end
