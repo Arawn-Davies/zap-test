@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Example Hello World Blog" %></title>
+    <title><%= content_for(:title) || "Example SecuBlog" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -19,7 +19,7 @@
     <nav class="bg-indigo-700 shadow-lg">
       <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
         <a href="<%= root_path %>" class="text-white text-2xl font-bold tracking-tight hover:text-indigo-200 transition">
-          ✍️ Hello World Blog
+          SecuBlog
         </a>
         <div class="flex items-center gap-4">
           <a href="<%= root_path %>" class="text-indigo-100 hover:text-white transition font-medium">Home</a>
@@ -55,7 +55,7 @@
 
     <!-- Footer -->
     <footer class="bg-indigo-700 text-indigo-200 text-center py-4 text-sm">
-      &copy; <%= Time.current.year %> Hello World Blog — Built with Ruby on Rails &amp; Tailwind CSS
+      &copy; <%= Time.current.year %> SecuBlog — Built with Ruby on Rails &amp; Tailwind CSS
     </footer>
   </body>
 </html>
