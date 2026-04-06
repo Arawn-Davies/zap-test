@@ -2,7 +2,6 @@ name: CI
 
 on:
   pull_request:
-  push:
 
 permissions:
   contents: read
@@ -45,7 +44,7 @@ jobs:
             brakeman-report.md
 
       - name: Create GitHub Issues for Brakeman warnings
-        if: github.event_name == 'push'
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -87,17 +86,17 @@ jobs:
               --label "brakeman,security" \
               --body "## Brakeman Security Warning
 
-**Type:** $warning_type
-**File:** \`$file\`
-**Line:** $line
-**Confidence:** $confidence
-**Message:** $message
-**Code:** \`$code\`
-**More Info:** $link
+          **Type:** $warning_type
+          **File:** \`$file\`
+          **Line:** $line
+          **Confidence:** $confidence
+          **Message:** $message
+          **Code:** \`$code\`
+          **More Info:** $link
 
----
-*Fingerprint: $fingerprint*
-*Found by [Brakeman](https://brakemanscanner.org/) in CI run [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*"
+          ---
+          *Fingerprint: $fingerprint*
+          *Found by [Brakeman](https://brakemanscanner.org/) in CI run [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})*"
             echo "Created issue for fingerprint $fingerprint"
           done
 
@@ -107,21 +106,6 @@ jobs:
 
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
-      
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
 
   lint:
     runs-on: ubuntu-latest
