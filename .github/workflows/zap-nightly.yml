@@ -74,3 +74,4 @@ jobs:
           fail_action: false
           allow_issue_writing: true
           artifact_name: 'zap-nightly-report'
+          cmd_options: '-config scanner.antiCSRFTokenNames=authenticity_token'
